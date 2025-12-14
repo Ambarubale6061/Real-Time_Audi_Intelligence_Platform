@@ -1,0 +1,9 @@
+C:\Projects\Real-Time_Audi_Intelligence_Platform\backend\src\main\java\com\ai\audio\AudioApplication.java
+C:\Projects\Real-Time_Audi_Intelligence_Platform\backend\src\main\java\com\ai\audio\config\WebSocketConfig.java
+C:\Projects\Real-Time_Audi_Intelligence_Platform\backend\src\main\java\com\ai\audio\config\WebSocketRouter.java
+C:\Projects\Real-Time_Audi_Intelligence_Platform\backend\src\main\java\com\ai\audio\controller\AudioStreamController.java
+C:\Projects\Real-Time_Audi_Intelligence_Platform\backend\src\main\java\com\ai\audio\controller\TranscriptionSocket.java
+C:\Projects\Real-Time_Audi_Intelligence_Platform\backend\src\main\java\com\ai\audio\model\TranscriptFrame.java
+C:\Projects\Real-Time_Audi_Intelligence_Platform\backend\src\main\java\com\ai\audio\service\GeminiStreamingService.java
+C:\Projects\Real-Time_Audi_Intelligence_Platform\backend\src\main\java\com\ai\audio\service\SessionRegistry.java
+C:\Projects\Real-Time_Audi_Intelligence_Platform\backend\src\main\java\com\ai\audio\util\AudioChunkUtils.java
