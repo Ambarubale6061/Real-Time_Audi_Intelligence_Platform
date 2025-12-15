@@ -7,62 +7,79 @@ export default function ControlPanel({
   onResume,
   onDownload,
   canDownload,
+  transcription = "",
+  status = "idle",
   volume = 0,
   fps = 60,
-  recording = false,
 }) {
   const [mic, setMic] = useState(60);
-  const [noise, setNoise] = useState(true);
-  const [theme, setTheme] = useState("light");
-  const [speed, setSpeed] = useState(1);
-  const [bassBoost, setBassBoost] = useState(false);
-  const [trebleBoost, setTrebleBoost] = useState(false);
+
+  const isRecording = status === "recording";
+  const isPaused = status === "paused";
+
+  const copyText = () => {
+    if (!transcription) return;
+    navigator.clipboard.writeText(transcription);
+  };
 
   return (
-    <div className={`control-card ${theme}`}>
-      {/* Live Transcription */}
-      <div className="transcription-box">
-        <h3>Live Transcription</h3>
-        <p>Real-time transcription of audio appears here.</p>
+    <div className="control-card">
+      {/* ================= STATUS ================= */}
+      <div className={`status-pill ${status}`}>
+        {status === "recording" && "🔴 RECORDING"}
+        {status === "paused" && "⏸ PAUSED"}
+        {status === "stopped" && "⏹ STOPPED"}
+        {status === "idle" && "⚪ IDLE"}
       </div>
 
-      {/* Control Buttons */}
+      {/* ================= TRANSCRIPTION ================= */}
+      <div className={`transcription ${isRecording ? "active" : ""}`}>
+        {transcription && (
+          <button className="copy-btn" onClick={copyText} title="Copy">
+            📋
+          </button>
+        )}
+
+        {isRecording
+          ? transcription || "Listening..."
+          : "Press Start to begin recording"}
+      </div>
+
+      {/* ================= CONTROLS ================= */}
       <div className="button-row">
-        <button
-          className="btn start"
-          onClick={() => {
-            onStart();
-          }}
-        >
+        <button className="btn start" onClick={onStart} disabled={isRecording}>
           Start
         </button>
         <button
           className="btn stop"
-          onClick={() => {
-            onStop();
-          }}
+          onClick={onStop}
+          disabled={status === "idle"}
         >
           Stop
         </button>
-        <button className="btn dark" onClick={onPause}>
+      </div>
+
+      <div className="button-row">
+        <button className="btn dark" onClick={onPause} disabled={!isRecording}>
           Pause
         </button>
-        <button className="btn dark" onClick={onResume}>
+        <button className="btn dark" onClick={onResume} disabled={!isPaused}>
           Resume
         </button>
       </div>
 
+      {/* ================= AUDIO DOWNLOAD ================= */}
       <div className="button-row">
         <button
           className="btn dark"
           disabled={!canDownload}
           onClick={onDownload}
         >
-          Download
+          ⬇ Download Audio
         </button>
       </div>
 
-      {/* Mic Settings */}
+      {/* ================= MIC ================= */}
       <div className="setting">
         <label>Mic Sensitivity</label>
         <input
@@ -74,26 +91,24 @@ export default function ControlPanel({
         />
       </div>
 
-      <div className="setting toggle">
-        <span>Noise Suppression</span>
-        <div
-          className={`switch ${noise ? "on" : ""}`}
-          onClick={() => setNoise(!noise)}
-        >
-          <div className="knob" />
-        </div>
-      </div>
-
-      {/* Extra Settings */}
-      <div className="extra-settings">
-        <div className="setting toggle">
-          <span>Bass Boost</span>
+      {/* ================= INDICATORS ================= */}
+      <div className="indicator-card">
+        <div style={{ width: "45%" }}>
+          <span>FPS</span>
+          <strong style={{ float: "right" }}>{fps}</strong>
           <div
-            className={`switch ${bassBoost ? "on" : ""}`}
-            onClick={() => setBassBoost(!bassBoost)}
-          >
-            <div className="knob" />
-          </div>
+            className="progress pink"
+            style={{ width: `${Math.min((fps / 60) * 100, 100)}%` }}
+          />
+        </div>
+
+        <div style={{ width: "45%" }}>
+          <span>Volume</span>
+          <strong style={{ float: "right" }}>{Math.round(volume * 100)}</strong>
+          <div
+            className="progress pink"
+            style={{ width: `${Math.min(volume * 100, 100)}%` }}
+          />
         </div>
       </div>
     </div>

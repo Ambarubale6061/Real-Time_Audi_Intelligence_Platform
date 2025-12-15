@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
 
-export default function useWebSocket(active) {
+export default function useWebSocket() {
   const [text, setText] = useState("");
 
   useEffect(() => {
-    if (!active) return;
+    const words = ["Hello", "this", "is", "live", "audio", "transcription"];
+    let i = 0;
 
-    const ws = new WebSocket("ws://localhost:8080/ws/transcribe");
+    const interval = setInterval(() => {
+      setText((t) => t + " " + words[i++ % words.length]);
+    }, 800);
 
-    ws.onmessage = (e) => {
-      setText((prev) => prev + " " + e.data);
-    };
-
-    return () => ws.close();
-  }, [active]);
+    return () => clearInterval(interval);
+  }, []);
 
   return text;
 }

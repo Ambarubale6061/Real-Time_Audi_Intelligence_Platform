@@ -1,3 +1,4 @@
+/* ================= BODY ================= */
 body {
   margin: 0;
   background: radial-gradient(circle at top, #050b2c, #01010a);
@@ -6,45 +7,104 @@ body {
   overflow: hidden;
 }
 
+/* ================= APP CONTAINER ================= */
 .app {
   height: 100vh;
   padding: 32px;
   max-width: 1600px;
   margin: auto;
+  box-sizing: border-box;
 }
 
+/* ================= DASHBOARD GRID ================= */
 .dashboard {
   display: grid;
   grid-template-columns: 1.3fr 1fr;
   gap: 24px;
   height: calc(100% - 80px);
+  align-items: stretch; /* children fill height */
 }
 
+/* ================= VISUAL BOX ================= */
 .visual-box {
   border-radius: 40px;
   background: transparent;
+  height: 100%; /* fill column height */
+  box-sizing: border-box;
 }
 
-.panel {
+/* ================= CONTROL PANEL ================= */
+.control-card {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-}
-
-.control-card {
+  gap: 16px;
   background: radial-gradient(circle at top, #081b3a, #030818);
   border-radius: 26px;
   padding: 22px;
   box-shadow: inset 0 0 40px rgba(0, 150, 255, 0.15),
     0 0 40px rgba(0, 0, 0, 0.6);
+  height: 100%; /* fill column height */
+  box-sizing: border-box;
 }
 
+/* ================= PANEL STRUCTURE ================= */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  height: 100%;
+}
+
+/* ================= TRANSCRIPTION BOX ================= */
 .transcription-box {
   border-radius: 20px;
   padding: 18px;
   background: rgba(255, 255, 255, 0.04);
+  flex: 1; /* expand to fill remaining space */
+  display: flex;
+  flex-direction: column;
 }
 
+/* ================= TRANSCRIPTION ================= */
+.transcription {
+  position: relative;
+  min-height: 100px;
+  padding: 14px;
+  background: #0b0014;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  transition: 0.3s;
+  flex: 1; /* allow stretching */
+  overflow-y: auto; /* scroll if content exceeds */
+}
+
+.transcription.active {
+  box-shadow: 0 0 25px #ff4fd8;
+  border: 1px solid #ff4fd8;
+}
+
+/* ================= COPY BUTTON ================= */
+.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ================= BUTTON ROW ================= */
 .button-row {
   display: flex;
   gap: 14px;
@@ -75,6 +135,12 @@ body {
   background: rgba(255, 255, 255, 0.06);
 }
 
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ================= SETTINGS ================= */
 .setting {
   margin-top: 18px;
 }
@@ -90,6 +156,7 @@ body {
   align-items: center;
 }
 
+/* ================= SWITCH ================= */
 .switch {
   width: 54px;
   height: 28px;
@@ -112,6 +179,7 @@ body {
   background: #00eaff;
 }
 
+/* ================= INDICATOR CARD ================= */
 .indicator-card {
   display: flex;
   justify-content: space-between;
@@ -121,25 +189,67 @@ body {
   border-radius: 18px;
 }
 
-.bar {
+/* ================= PROGRESS BAR ================= */
+.progress {
   height: 6px;
   border-radius: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
   margin-top: 6px;
 }
 
-.bar.pink {
+.progress.pink {
   background: linear-gradient(90deg, #ff2fa0, #ff0077);
-  width: 100%;
+  width: 0%;
+  transition: width 0.15s ease-out;
 }
 
-.transcription {
-  padding: 14px;
-  background: #0b0014;
-  border-radius: 12px;
-  transition: 0.3s;
+/* ================= STATUS BOX ================= */
+.status-box {
+  width: fit-content;
+  padding: 6px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 14px;
+  letter-spacing: 0.4px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.transcription.active {
-  box-shadow: 0 0 25px #ff4fd8;
-  border: 1px solid #ff4fd8;
+.status-box.recording {
+  color: #ff4d4d;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.7);
+  background: rgba(255, 0, 0, 0.12);
+}
+
+.status-box.paused {
+  color: #ffd54f;
+  box-shadow: 0 0 10px rgba(255, 213, 79, 0.6);
+}
+
+.status-box.idle {
+  color: #aaa;
+}
+
+/* ================= STATUS PILL ================= */
+.status-pill {
+  padding: 8px 14px;
+  border-radius: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.status-pill.recording {
+  background: #ff0044;
+}
+.status-pill.paused {
+  background: #ffaa00;
+}
+.status-pill.stopped {
+  background: #555;
+}
+.status-pill.idle {
+  background: #333;
 }
