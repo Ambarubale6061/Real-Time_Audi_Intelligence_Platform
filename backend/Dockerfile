@@ -1,27 +1,31 @@
-# Stage 1: Build with Maven
-FROM maven:3.9.3-eclipse-temurin-17 AS build
+# ---------- BUILD STAGE ----------
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
-# Set working directory
 WORKDIR /app
 
-# Copy pom.xml and source code
+# Copy pom.xml first (for cache)
 COPY pom.xml .
+
+# Download dependencies
+RUN mvn dependency:go-offline
+
+# Copy source code
 COPY src ./src
 
-# Build the project (skip tests for faster build)
-RUN mvn package -DskipTests
+# Build JAR (SKIP TESTS)
+RUN mvn clean package -DskipTests
 
-# Stage 2: Runtime image
-FROM eclipse-temurin:17-jdk-alpine
 
-# Set working directory
+# ---------- RUNTIME STAGE ----------
+FROM eclipse-temurin:17-jre
+
 WORKDIR /app
 
-# Copy the built jar from stage 1 (wildcard version to avoid mismatch)
-COPY --from=build /app/target/*.jar ./audio-intel-backend.jar
+# Copy jar dynamically (OPTION 2)
+COPY --from=build /app/target/*.jar app.jar
 
-# Expose port 8080
+# Expose Spring Boot port
 EXPOSE 8080
 
-# Run the jar
-CMD ["java", "-jar", "audio-intel-backend.jar"]
+# Run app
+ENTRYPOINT ["java", "-jar", "app.jar"]
