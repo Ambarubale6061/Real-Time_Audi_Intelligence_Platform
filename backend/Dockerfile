@@ -1,25 +1,25 @@
-# Use OpenJDK 17 (Alpine for smaller image)
-FROM eclipse-temurin:17-jdk-alpine
+# Use Maven + JDK 17 image
+FROM maven:3.9.3-eclipse-temurin-17 AS build
 
-# Set working directory inside container
+# Set working directory
 WORKDIR /app
 
-# Copy Maven wrapper and pom.xml first (for caching dependencies)
-COPY mvnw .
-COPY .mvn/ .mvn
+# Copy pom.xml and source code
 COPY pom.xml .
-
-# Copy source code
 COPY src ./src
 
-# Make Maven wrapper executable
-RUN chmod +x mvnw
+# Build the project (skip tests for faster build)
+RUN mvn package -DskipTests
 
-# Build the Spring Boot application (skip tests for faster build)
-RUN ./mvnw package -DskipTests
+# Use smaller JDK runtime image for final app
+FROM eclipse-temurin:17-jdk-alpine
+WORKDIR /app
 
-# Expose port 8080 (Render default)
+# Copy jar from build stage
+COPY --from=build /app/target/audio-intel-backend-0.0.1-SNAPSHOT.jar ./audio-intel-backend.jar
+
+# Expose port
 EXPOSE 8080
 
 # Run the jar
-CMD ["java", "-jar", "target/audio-intel-backend-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "audio-intel-backend.jar"]
